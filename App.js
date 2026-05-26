@@ -4,7 +4,35 @@ import { useState } from 'react';
 export default function App() {
   const [item, setItem] = useState('');
   const [quantidade, setQuantidade] = useState('');
-  const [lista, setLista] = useState([{id : 1, nome : 'mouse', quantidade : 12}]);
+  const [lista, setLista] = useState([]);
+
+  function adicionarItem(){
+
+    if(item.trim() === '' || quantidade.trim() === ''){
+      return;
+    }
+
+    const novoItem = {
+      id : String(Date.now()),
+      nome : item,
+      quantidade : quantidade
+    }
+
+    //lista.push(novoItem);
+
+    //Adiciona um novo item
+    setLista([...lista, novoItem]);
+
+    console.log(lista);
+
+    setItem('');
+    setQuantidade('');
+  }
+
+  function removerItem(id){
+    const novaLista = lista.filter(item => item.id !== id);
+    setLista(novaLista);
+  }
 
   return (
     <View style={styles.container}>
@@ -14,7 +42,7 @@ export default function App() {
       <TextInput placeholder='Quantidade' style={styles.input}
                  onChangeText={setQuantidade} value={quantidade}/>
 
-      <Button title='Gravar' />
+      <Button title='Gravar' onPress={adicionarItem}/>
 
       <FlatList 
         data={lista}
@@ -22,7 +50,7 @@ export default function App() {
         renderItem={({item}) => (
           <View style={styles.item}>
             <Text style={styles.texto}>{item.nome} - {item.quantidade}</Text>
-            <Button title='Apagar' color={'red'}/>
+            <Button title='Apagar' color={'red'} onPress={() => removerItem(item.id)}/>
           </View>
   )} />
     </View>
